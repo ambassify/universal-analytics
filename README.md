@@ -560,6 +560,27 @@ Additionally, the module also exposes a `createFromSession` method to create a v
 var visitor = ua.createFromSession(socket.handshake.session);
 ```
 
+# Overwrite or extend hit task
+The hit task is the function that internally in the library does the actual request to Google Analytics. You can for example overwrite the default `sendHitTask` to also send all pageviews and events to your own logging server using following code:
+
+```javascript
+var originalSendHitTask = visitor.get('sendHitTask');
+var customSendHitTask = function(path, options, cb) {
+    const bodies = options.body.split('\n').map((v) => querystring.parse(v));
+    console.log('do ambassify request', options);
+    request.post('https://my-endpoint/', {
+        body: JSON.stringify(bodies),
+        headers: {}
+    });
+    originalSendHitTask(path, options, cb);
+}
+
+visitor.pageview("/landing-page-1").send()
+```
+
+The above code will send the pageview events first to our own `https://my-endpoint/` and then
+it calls to original hit task so the pageview is also stored in Google Analytics.
+
 # Debug mode
 
 `universal-analytics` is using the [`debug`](https://www.npmjs.com/package/debug) library. It can be instructed to output information during tracking by setting the `DEBUG` environment variable:
