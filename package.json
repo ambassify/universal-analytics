@@ -21,8 +21,8 @@
     "uuid": "^8.0.0"
   },
   "devDependencies": {
-    "mocha": "*",
-    "should": "*",
+    "mocha": "^10.2.0",
+    "should": "^13.2.3",
     "sinon": "^1.17.7"
   },
   "author": "Jörg Tillmann <joerg@peaksandpies.com>",
